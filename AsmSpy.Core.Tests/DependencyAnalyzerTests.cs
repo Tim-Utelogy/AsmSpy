@@ -13,6 +13,8 @@ namespace AsmSpy.Core.Tests
 {
     public class DependencyAnalyzerTests
     {
+        private const string PortableRetargetableMscorlibIdentity = "mscorlib, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=true";
+
         private readonly ITestOutputHelper output;
         private readonly TestLogger logger;
 
@@ -95,10 +97,10 @@ namespace AsmSpy.Core.Tests
         }
 
         [Fact]
-        public void AnalyzeShouldHandlePortableRetargetableAssemblyNamesWithBindingPolicy()
+        public void GetAssemblyReferenceInfoShouldHandlePortableRetargetableAssemblies()
         {
             var assemblies = new Dictionary<string, AssemblyReferenceInfo>();
-            var assemblyName = new AssemblyName("mscorlib, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=true");
+            var assemblyName = new AssemblyName(PortableRetargetableMscorlibIdentity);
             var getAssemblyReferenceInfo = typeof(DependencyAnalyzer).GetMethod(
                 "GetAssemblyReferenceInfo",
                 BindingFlags.NonPublic | BindingFlags.Static);
