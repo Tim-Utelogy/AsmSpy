@@ -1,7 +1,6 @@
-﻿using AsmSpy.Core.TestLibrary;
+using AsmSpy.Core.TestLibrary;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -97,20 +96,13 @@ namespace AsmSpy.Core.Tests
         }
 
         [Fact]
-        public void GetAssemblyReferenceInfoShouldHandlePortableRetargetableAssemblies()
+        public void ApplyPolicyShouldHandlePortableRetargetableAssemblies()
         {
-            var assemblies = new Dictionary<string, AssemblyReferenceInfo>();
             var assemblyName = new AssemblyName(PortableRetargetableMscorlibIdentity);
-            var getAssemblyReferenceInfo = typeof(DependencyAnalyzer).GetMethod(
-                "GetAssemblyReferenceInfo",
-                BindingFlags.NonPublic | BindingFlags.Static);
 
-            var assemblyReferenceInfo = (AssemblyReferenceInfo)getAssemblyReferenceInfo.Invoke(
-                null,
-                new object[] { assemblies, assemblyName, AppDomain.CurrentDomain, options, string.Empty });
+            var assemblyFullName = DependencyAnalyzer.ApplyPolicy(AppDomain.CurrentDomain, assemblyName);
 
-            Assert.NotNull(assemblyReferenceInfo);
-            Assert.Equal(assemblyName.FullName, assemblyReferenceInfo.AssemblyName.FullName);
+            Assert.False(string.IsNullOrEmpty(assemblyFullName));
         }
     }
 }

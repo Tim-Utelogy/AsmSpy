@@ -232,7 +232,7 @@ namespace AsmSpy.Core
             return assemblyReferenceInfo;
         }
 
-        private static string ApplyPolicy(AppDomain appDomainWithBindingRedirects, AssemblyName assemblyName)
+        internal static string ApplyPolicy(AppDomain appDomainWithBindingRedirects, AssemblyName assemblyName)
         {
             if (appDomainWithBindingRedirects == null)
             {
