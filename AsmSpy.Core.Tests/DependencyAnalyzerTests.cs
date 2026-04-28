@@ -93,5 +93,22 @@ namespace AsmSpy.Core.Tests
             var mscorlib = tests.References.Single(x => x.AssemblyName.Name == "mscorlib");
             Assert.Equal(AssemblySource.GlobalAssemblyCache, mscorlib.AssemblySource);
         }
+
+        [Fact]
+        public void AnalyzeShouldHandlePortableRetargetableAssemblyNamesWithBindingPolicy()
+        {
+            var assemblies = new Dictionary<string, AssemblyReferenceInfo>();
+            var assemblyName = new AssemblyName("mscorlib, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=true");
+            var getAssemblyReferenceInfo = typeof(DependencyAnalyzer).GetMethod(
+                "GetAssemblyReferenceInfo",
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+            var assemblyReferenceInfo = (AssemblyReferenceInfo)getAssemblyReferenceInfo.Invoke(
+                null,
+                new object[] { assemblies, assemblyName, AppDomain.CurrentDomain, options, string.Empty });
+
+            Assert.NotNull(assemblyReferenceInfo);
+            Assert.Equal(assemblyName.FullName, assemblyReferenceInfo.AssemblyName.FullName);
+        }
     }
 }

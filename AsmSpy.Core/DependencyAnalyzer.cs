@@ -220,9 +220,7 @@ namespace AsmSpy.Core
                 return null;
             }
 
-            var assemblyFullName = appDomainWithBindingRedirects != null 
-                ? appDomainWithBindingRedirects.ApplyPolicy(assemblyName.FullName) 
-                : assemblyName.FullName;
+            var assemblyFullName = ApplyPolicy(appDomainWithBindingRedirects, assemblyName);
 
             if (assemblies.TryGetValue(assemblyFullName, out AssemblyReferenceInfo assemblyReferenceInfo))
             {
@@ -232,6 +230,23 @@ namespace AsmSpy.Core
             assemblyReferenceInfo = new AssemblyReferenceInfo(assemblyName, new AssemblyName(assemblyFullName), fileName);
             assemblies.Add(assemblyFullName, assemblyReferenceInfo);
             return assemblyReferenceInfo;
+        }
+
+        private static string ApplyPolicy(AppDomain appDomainWithBindingRedirects, AssemblyName assemblyName)
+        {
+            if (appDomainWithBindingRedirects == null)
+            {
+                return assemblyName.FullName;
+            }
+
+            try
+            {
+                return appDomainWithBindingRedirects.ApplyPolicy(assemblyName.FullName);
+            }
+            catch (ArgumentException)
+            {
+                return assemblyName.FullName;
+            }
         }
     }
 }
